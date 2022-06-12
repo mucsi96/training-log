@@ -1,18 +1,11 @@
 import './App.css';
-import { AuthorizeButton } from './AuthorizeButton';
-import { listMajors } from './gapi';
-import { DataButton } from './DataButton';
+import { Data } from './Data';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <AuthorizeButton
-          onAuthorized={() => {
-            listMajors();
-          }}
-        />
-        <DataButton />
+        <Data />
       </header>
     </div>
   );

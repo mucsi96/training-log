@@ -1,17 +1,17 @@
 import { createContext, FC, useContext, useEffect, useState } from 'react';
-import { initTokenClient } from './gapi';
+import { initGapi, initSheetsApi, initTokenClient } from './gapi';
 
-const TokenClientContext = createContext<
+const GoogleAuthProviderContext = createContext<
   google.accounts.oauth2.TokenClient | undefined
 >(undefined);
 
-export type TokenClientProviderProps = {
+export type GoogleAuthProviderProps = {
   children?: React.ReactNode;
 };
 
 let tokenClientRequested = false;
 
-export const TokenClientProvider: FC<TokenClientProviderProps> = ({
+export const GoogleAuthProvider: FC<GoogleAuthProviderProps> = ({
   children,
 }) => {
   const [tokenClient, setTokenClient] =
@@ -24,17 +24,19 @@ export const TokenClientProvider: FC<TokenClientProviderProps> = ({
       }
 
       tokenClientRequested = true;
+      await initGapi();
+      await initSheetsApi();
       setTokenClient(await initTokenClient());
     })();
   }, [tokenClient]);
 
   return (
-    <TokenClientContext.Provider value={tokenClient}>
+    <GoogleAuthProviderContext.Provider value={tokenClient}>
       {tokenClient ? children : null}
-    </TokenClientContext.Provider>
+    </GoogleAuthProviderContext.Provider>
   );
 };
 
 export function useTokenClient() {
-  return useContext(TokenClientContext);
+  return useContext(GoogleAuthProviderContext);
 }
