@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react';
+import { useEffectOnlyOnce } from './useEffectOnlyOnce';
 
 type DayLog = {
   weight?: number;
@@ -36,11 +37,11 @@ async function getTodayLogs(): Promise<DayLog | undefined> {
 
 export const Data: FC = () => {
   const [todayLogs, setTodayLogs] = useState<DayLog>();
-  useEffect(() => {
+  useEffectOnlyOnce(() => {
     (async () => {
       setTodayLogs(await getTodayLogs());
     })();
-  }, []);
+  });
   return (
     <div>
       <p>Weight: {todayLogs?.weight} </p>

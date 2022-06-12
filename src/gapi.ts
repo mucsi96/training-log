@@ -32,7 +32,7 @@ export async function initTokenClient() {
   );
   const tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: import.meta.env.VITE_CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+    scope: 'https://www.googleapis.com/auth/spreadsheets',
     callback: '' as any,
   });
   await getToken(tokenClient);
