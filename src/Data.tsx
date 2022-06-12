@@ -1,29 +1,51 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 
-async function listMajors() {
+type DayLog = {
+  weight?: number;
+  rideElevationGain?: number;
+  pushups?: number;
+};
+
+async function getTodayLogs(): Promise<DayLog | undefined> {
+  const today = new Date();
+  const date = today.toLocaleDateString('en-US');
   const response = await gapi.client.sheets.spreadsheets.values.get({
     spreadsheetId: '100GpHmID_VxZybOL_lCkdkcafqYIxgkIvMK63QKmZdQ',
-    range: '2022!A2:O167',
+    range: `${today.getFullYear()}!A2:O366`,
   });
 
   const range = response.result;
   if (!range || !range.values || range.values.length == 0) {
     return;
   }
-  // Flatten to string to display
-  const output = range.values.reduce(
-    (str, row) => `${str}${row[0]}, ${row[4]}\n`,
-    'Name, Major:\n'
-  );
-  console.log(output);
-  return output;
+
+  const { values } = range;
+
+  const row = values.find((row) => row[0] === date);
+
+  if (row) {
+    return {
+      weight: row[1] && parseFloat(row[1]),
+      rideElevationGain: row[2] && parseInt(row[2]),
+      pushups: row[3] && parseInt(row[3]),
+    };
+  }
+
+  return row;
 }
 
 export const Data: FC = () => {
+  const [todayLogs, setTodayLogs] = useState<DayLog>();
   useEffect(() => {
     (async () => {
-      await listMajors();
+      setTodayLogs(await getTodayLogs());
     })();
   }, []);
-  return null;
+  return (
+    <div>
+      <p>Weight: {todayLogs?.weight} </p>
+      <p>Ride elevation gain: {todayLogs?.rideElevationGain} </p>
+      <p>Pushups: {todayLogs?.pushups} </p>
+    </div>
+  );
 };
