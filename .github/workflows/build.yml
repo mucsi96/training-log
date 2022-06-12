@@ -12,8 +12,6 @@ jobs:
   deploy:
     runs-on: windows-latest
     if: ${{ github.event_name == 'push' }}
-    env:
-      PUBLIC_URL: /training-log
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -33,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: npm install --ci
       - name: Prepare deployment
-        run: npm run build
+        run: npm run build -- --base=/training-log/
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
