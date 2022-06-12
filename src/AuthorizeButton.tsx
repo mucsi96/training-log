@@ -7,7 +7,7 @@ export type AuthorizeButtonProps = {
 
 export const AuthorizeButton: FC<AuthorizeButtonProps> = ({ onAuthorized }) => {
   const tokenClient = useTokenClient();
-  const [authorized, setAuthorized] = useState(false);
+  const [authorized, setAuthorized] = useState(() => !!gapi.client.getToken());
 
   function handleAuthClick() {
     if (!tokenClient) {

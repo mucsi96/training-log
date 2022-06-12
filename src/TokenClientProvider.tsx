@@ -9,6 +9,8 @@ export type TokenClientProviderProps = {
   children?: React.ReactNode;
 };
 
+let tokenClientRequested = false;
+
 export const TokenClientProvider: FC<TokenClientProviderProps> = ({
   children,
 }) => {
@@ -17,17 +19,18 @@ export const TokenClientProvider: FC<TokenClientProviderProps> = ({
 
   useEffect(() => {
     (async () => {
-      if (tokenClient) {
+      if (tokenClientRequested) {
         return;
       }
 
+      tokenClientRequested = true;
       setTokenClient(await initTokenClient());
     })();
   }, [tokenClient]);
 
   return (
     <TokenClientContext.Provider value={tokenClient}>
-      {children}
+      {tokenClient ? children : null}
     </TokenClientContext.Provider>
   );
 };
