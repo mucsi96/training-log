@@ -94,6 +94,15 @@ export const Data: FC = () => {
       <button type="button" onClick={() => addPushups(10)}>
         +10
       </button>
+      <button type="button" onClick={() => addPushups(-1)}>
+        -1
+      </button>
+      <button type="button" onClick={() => addPushups(-5)}>
+        -5
+      </button>
+      <button type="button" onClick={() => addPushups(-10)}>
+        -10
+      </button>
     </div>
   );
 };
